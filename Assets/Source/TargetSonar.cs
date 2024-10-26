@@ -6,12 +6,13 @@ public class TargetSonar : MonoBehaviour
 {
     private GameObject mPrayer;
     private GameObject mAttackPoints;
+    GameObject[] target;
 
     // Start is called before the first frame update
     void Start()
     {
         mPrayer = GameObject.Find("Player");
-
+        target = new GameObject[3];
     }
 
     // Update is called once per frame
@@ -32,7 +33,7 @@ public class TargetSonar : MonoBehaviour
 
         // 子オブジェクトを格納する配列作成
         var children = new GameObject[mAttackPoints.transform.childCount];
-        var  target = new GameObject[3];
+
 
         // 0～個数-1までの子を順番に配列に格納
         for (var i = 0; i < children.Length; ++i)
