@@ -7,9 +7,6 @@ public class TargetSonar : MonoBehaviour
     private GameObject mPrayer;
     private GameObject mAttackPoints;
 
-
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -112,8 +109,8 @@ public class TargetSonar : MonoBehaviour
 ○・プレイヤーとの距離を取得する
 ○・プレイヤー/NPCのAttackPointsオブジェクトを取得する
 ○・AttackPoints以下にあるオブジェクトの距離を取得する
-・AttackPoints以下にあるオブジェクトの距離を比較する
-・AttackPoints以下にあるオブジェクトで近いものを3つ取得する
+○・AttackPoints以下にあるオブジェクトの距離を比較する
+○・AttackPoints以下にあるオブジェクトで近いものを3つ取得する
 
 マスター版
 ・NPCとの距離を取得する

@@ -679,6 +679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1792555643}
   - component: {fileID: 1792555644}
+  - component: {fileID: 1792555645}
   m_Layer: 0
   m_Name: BULL
   m_TagString: Untagged
@@ -714,6 +715,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d955fa4726e5e4cb362a9f2bd14f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1792555645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792555642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd9943c622ae5c43993e9beea6dd3ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 780654909}
 --- !u!1 &1844681313
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +872,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}

@@ -61,7 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Source\DistanceController.cs" />
+    <Compile Include="Assets\Source\BullObject.cs" />
     <Compile Include="Assets\Source\TargetSonar.cs" />
+    <Compile Include="Assets\Source\BullAttack.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
