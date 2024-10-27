@@ -10,6 +10,7 @@ public class BullObject : MonoBehaviour
     private GameObject mSelectAttackPoint;
     private bool mGetAttackPoint;
     private bool mAttackSet;
+    private bool mAttackMove;
     private float mSpeed = 3.0f;
     private float mStanTime = 3.0f;
     private float mNowStanTime;
@@ -23,6 +24,7 @@ public class BullObject : MonoBehaviour
         target = new GameObject[3];
         mGetAttackPoint = false;
         mAttackSet = false;
+        mAttackMove = false;
         mNowStanTime = 0.0f;
 
     }
@@ -32,38 +34,7 @@ public class BullObject : MonoBehaviour
     {
         TargetSonar();
 
-        if (!mGetAttackPoint) 
-        {
-            mSelectAttackPoint = target[Random.Range(1, 3)];
-            mGetAttackPoint = true;
-        }
-        else
-        {
-            if (!mAttackSet && mSelectAttackPoint.transform.position != this.transform.position)
-            {
-                //スタート位置、ターゲットの座標、速度
-                transform.position = Vector3.MoveTowards(
-                  transform.position,
-                  mSelectAttackPoint.transform.position,
-                  mSpeed * Time.deltaTime);
-            }
-            else if (!mAttackSet && mSelectAttackPoint.transform.position == this.transform.position)
-            {
-                mAttackSet = true;
-                mNowStanTime = 0.0f;
-            }
-            else if (mAttackSet && mNowStanTime <= mStanTime)
-            {
-                mNowStanTime += Time.deltaTime;
-            }
-            else if (mAttackSet && mNowStanTime >= mStanTime)
-            {
-                mAttackSet = false;
-                mGetAttackPoint = false;
-            }
-        }
-
-        Debug.Log(mSelectAttackPoint);
+        Attack();
     }
 
     void TargetSonar()
@@ -154,6 +125,74 @@ public class BullObject : MonoBehaviour
         }
     }
 
+    void Attack()
+    {
+        //突撃準備位置を取得していない場合、取得する
+        if (!mGetAttackPoint)
+        {
+            mSelectAttackPoint = target[Random.Range(1, 3)];
+            mGetAttackPoint = true;
+            Debug.Log("ランダムゲット" + mSelectAttackPoint);
+
+        }
+        //突撃準備位置を取得している場合
+        else
+        {
+            //突撃準備位置まで移動する
+            if (!mAttackSet && mSelectAttackPoint.transform.position != this.transform.position)
+            {
+                //スタート位置、ターゲットの座標、速度
+                transform.position = Vector3.MoveTowards(
+                  transform.position,
+                  mSelectAttackPoint.transform.position,
+                  mSpeed * Time.deltaTime);
+            }
+            //突撃準備位置に到着した場合、準備を始める
+            else if (!mAttackSet && mSelectAttackPoint.transform.position == this.transform.position)
+            {
+                mAttackSet = true;
+                mNowStanTime = 0.0f;
+            }
+            //突撃準備位置で準備時間分待機する
+            else if (mAttackSet && mNowStanTime <= mStanTime)
+            {
+                mNowStanTime += Time.deltaTime;
+            }
+            //突撃準備完了+突撃目標取得
+            else if (!mAttackMove && mAttackSet && mNowStanTime >= mStanTime)
+            {
+                mAttackMove = true;
+
+                //移動先Objectを取得
+                AttackPointObject instantAttackPointObject;
+                instantAttackPointObject = mSelectAttackPoint.GetComponent<AttackPointObject>();
+                mSelectAttackPoint = instantAttackPointObject.GetAttackEndPoint();
+
+            }
+            //突撃中
+            else if (mAttackMove && mSelectAttackPoint.transform.position != this.transform.position)
+            {
+                //スタート位置、ターゲットの座標、速度
+                transform.position = Vector3.MoveTowards(
+                  transform.position,
+                  mSelectAttackPoint.transform.position,
+                  mSpeed * Time.deltaTime);
+            }
+            //突撃完了
+            else if (mAttackMove && mSelectAttackPoint.transform.position == this.transform.position)
+            {
+                 mAttackSet = false;
+                 mGetAttackPoint = false;
+                mGetAttackPoint = false;
+                mAttackMove = false;
+                Debug.Log("凸完了" + mSelectAttackPoint);
+
+            }
+
+        }
+
+    }
+
 }
 
 /*
@@ -198,7 +237,6 @@ public class BullObject : MonoBehaviour
 ○・取得したAttackPointsのうちランダムに1つ取得する
 ○・ランダムに取得したAttackPointsに移動する
 ○・移動後待機する
-・プレイヤーに向かって突撃する(通り過ぎる)
-
-
+○・突撃終点を取得する
+○・突撃終点に向かって突撃する
  */
