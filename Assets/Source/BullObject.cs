@@ -4,18 +4,33 @@ using UnityEngine;
 
 public class BullObject : MonoBehaviour
 {
+    private enum BULL_STATUS
+    {
+        SONAR,//索敵
+        SET_ATTACK,//突撃準備
+        ATTACK,//突撃
+        EVASION,//回避後突撃
+        STUN_ATTACK,//攻撃側スタン
+        STUN_DAMAGE //攻撃された側のスタン
+    }
+
     private GameObject mPrayer;
     private GameObject mAttackPoints;
     private GameObject[] target;
     private GameObject mSelectAttackPoint;
     private bool mGetAttackPoint;
     private bool mAttackSet;
-    private bool mAttackMove;
+
     private float mSpeed = 3.0f;
-    private float mStanTime = 3.0f;
-    private float mNowStanTime;
+    private float mSetAttackTime = 3.0f;
+    private float mNowSetAttackTime;
+    private float mAttackStunTime = 5.0f;
+    private float mDamageStunTime = 3.0f;
+    private float mNowStunTime;
 
 
+
+    private BULL_STATUS bullStatus = BULL_STATUS.SONAR;
 
     // Start is called before the first frame update
     void Start()
@@ -24,17 +39,69 @@ public class BullObject : MonoBehaviour
         target = new GameObject[3];
         mGetAttackPoint = false;
         mAttackSet = false;
-        mAttackMove = false;
-        mNowStanTime = 0.0f;
-
+        mNowSetAttackTime = 0.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        TargetSonar();
+        switch (bullStatus)
+        {
+            case BULL_STATUS.SONAR:
+                TargetSonar();
+                break;
+            case BULL_STATUS.SET_ATTACK:
+                SetAttack();
+                break;
+            case BULL_STATUS.ATTACK:
+                Attack();
+                break;
+            case BULL_STATUS.EVASION:
+                Attack();
+                break;
+            case BULL_STATUS.STUN_ATTACK:
+                if (mNowStunTime <= mAttackStunTime)
+                {
+                    mNowStunTime += Time.deltaTime;
+                }
+                else
+                {
+                    mNowStunTime = 0.0f;
+                    bullStatus = BULL_STATUS.SONAR;
+                }
+                break;
+            case BULL_STATUS.STUN_DAMAGE:
+                if (mNowStunTime <= mDamageStunTime)
+                {
+                    mNowStunTime += Time.deltaTime;
+                }
+                else
+                {
+                    mNowStunTime = 0.0f;
+                    bullStatus = BULL_STATUS.SONAR;
+                }
+                break;
 
-        Attack();
+        }
+
+    }
+
+    void OnTriggerEnter(Collider collision)
+    {
+        if(collision.gameObject.name == "BULL")
+        {
+            switch (bullStatus)
+            {
+                case BULL_STATUS.ATTACK:
+                    Debug.Log("ATK");
+                    bullStatus = BULL_STATUS.STUN_DAMAGE;
+                    break;
+                case BULL_STATUS.EVASION:
+                    Debug.Log("EVASION");
+                    bullStatus = BULL_STATUS.STUN_ATTACK;
+                    break;
+            }
+        }
     }
 
     void TargetSonar()
@@ -113,85 +180,83 @@ public class BullObject : MonoBehaviour
                 target[0] = mAttackPoints.transform.GetChild(i).gameObject;
             }
 
-            //Debug.Log(children[i] + ":" + instantDis);
-
-
         }
 
-        // 0～個数-1までの子を順番に配列に格納
-        for (var i = 0; i < target.Length; ++i)
-        {
-            //Debug.Log("target[" + i + "]" + target[i]);
-        }
+        //状態遷移
+        bullStatus = BULL_STATUS.SET_ATTACK;
     }
 
-    void Attack()
+    void SetAttack()
     {
-        //突撃準備位置を取得していない場合、取得する
         if (!mGetAttackPoint)
         {
             mSelectAttackPoint = target[Random.Range(1, 3)];
             mGetAttackPoint = true;
             Debug.Log("ランダムゲット" + mSelectAttackPoint);
-
         }
-        //突撃準備位置を取得している場合
-        else
+        // 突撃準備位置まで移動する
+        else if (!mAttackSet && mSelectAttackPoint.transform.position != this.transform.position)
         {
-            //突撃準備位置まで移動する
-            if (!mAttackSet && mSelectAttackPoint.transform.position != this.transform.position)
-            {
-                //スタート位置、ターゲットの座標、速度
-                transform.position = Vector3.MoveTowards(
-                  transform.position,
-                  mSelectAttackPoint.transform.position,
-                  mSpeed * Time.deltaTime);
-            }
-            //突撃準備位置に到着した場合、準備を始める
-            else if (!mAttackSet && mSelectAttackPoint.transform.position == this.transform.position)
-            {
-                mAttackSet = true;
-                mNowStanTime = 0.0f;
-            }
-            //突撃準備位置で準備時間分待機する
-            else if (mAttackSet && mNowStanTime <= mStanTime)
-            {
-                mNowStanTime += Time.deltaTime;
-            }
-            //突撃準備完了+突撃目標取得
-            else if (!mAttackMove && mAttackSet && mNowStanTime >= mStanTime)
-            {
-                mAttackMove = true;
+            //スタート位置、ターゲットの座標、速度
+            transform.position = Vector3.MoveTowards(
+              transform.position,
+              mSelectAttackPoint.transform.position,
+              mSpeed * Time.deltaTime);
+        }
+        //突撃準備位置に到着した場合、準備を始める
+        else if (!mAttackSet && mSelectAttackPoint.transform.position == this.transform.position)
+        {
+            mAttackSet = true;
+            mNowSetAttackTime = 0.0f;
+        }
+        //突撃準備位置で準備時間分待機する
+        else if (mAttackSet && mNowSetAttackTime <= mSetAttackTime)
+        {
+            mNowSetAttackTime += Time.deltaTime;
+        }
+        //突撃準備完了+突撃目標取得
+        else if (mAttackSet && mNowSetAttackTime >= mSetAttackTime)
+        {
+            //移動先Objectを取得
+            AttackPointObject instantAttackPointObject;
+            instantAttackPointObject = mSelectAttackPoint.GetComponent<AttackPointObject>();
+            mSelectAttackPoint = instantAttackPointObject.GetAttackEndPoint();
 
-                //移動先Objectを取得
-                AttackPointObject instantAttackPointObject;
-                instantAttackPointObject = mSelectAttackPoint.GetComponent<AttackPointObject>();
-                mSelectAttackPoint = instantAttackPointObject.GetAttackEndPoint();
+            //フラグ初期化
+            mGetAttackPoint = false;
+            mAttackSet = false;
 
-            }
-            //突撃中
-            else if (mAttackMove && mSelectAttackPoint.transform.position != this.transform.position)
-            {
-                //スタート位置、ターゲットの座標、速度
-                transform.position = Vector3.MoveTowards(
-                  transform.position,
-                  mSelectAttackPoint.transform.position,
-                  mSpeed * Time.deltaTime);
-            }
-            //突撃完了
-            else if (mAttackMove && mSelectAttackPoint.transform.position == this.transform.position)
-            {
-                 mAttackSet = false;
-                 mGetAttackPoint = false;
-                mGetAttackPoint = false;
-                mAttackMove = false;
-                Debug.Log("凸完了" + mSelectAttackPoint);
-
-            }
-
+            //状態遷移
+            bullStatus = BULL_STATUS.ATTACK;
         }
 
     }
+
+    void Attack()
+    {
+        //突撃中
+        if (mSelectAttackPoint.transform.position != this.transform.position)
+        {
+            //スタート位置、ターゲットの座標、速度
+            transform.position = Vector3.MoveTowards(
+              transform.position,
+              mSelectAttackPoint.transform.position,
+              mSpeed * Time.deltaTime);
+        }
+        //突撃完了
+        else if (mSelectAttackPoint.transform.position == this.transform.position)
+        {
+            mAttackSet = false;
+            mGetAttackPoint = false;
+            Debug.Log("凸完了" + mSelectAttackPoint);
+
+            //状態遷移
+            bullStatus = BULL_STATUS.SONAR;
+        }
+
+    }
+
+    
 
 }
 
@@ -229,7 +294,7 @@ public class BullObject : MonoBehaviour
  */
 
 /*
- コードメモ；Attack
+ コードメモ；SetAttack/Attack
  概要：突撃のための準備移動と突進
  
 必要機能
@@ -239,4 +304,14 @@ public class BullObject : MonoBehaviour
 ○・移動後待機する
 ○・突撃終点を取得する
 ○・突撃終点に向かって突撃する
+ */
+
+/*
+  コードメモ；SelectStun
+ 概要：突撃のための準備移動と突進
+ 
+必要機能
+α版
+・どちらに充てられたか確認
+・待機する
  */
