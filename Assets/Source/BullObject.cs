@@ -21,13 +21,17 @@ public class BullObject : MonoBehaviour
     private bool mGetAttackPoint;
     private bool mAttackSet;
 
-    private float mSpeed = 3.0f;
+    private float mSpeed;
+    private float mSpeedOrigin = 3.0f;
+    private float mSpeedMagnification =1.0f;
     private float mSetAttackTime = 3.0f;
     private float mNowSetAttackTime;
     private float mAttackStunTime = 5.0f;
     private float mDamageStunTime = 3.0f;
     private float mNowStunTime;
 
+    private float[] mSpeedList = new float[] { 1, 1.1f, 1.3f, 1.6f, 2.0f };
+    private int mSpeedListCount;
 
 
     private BULL_STATUS bullStatus = BULL_STATUS.SONAR;
@@ -40,6 +44,8 @@ public class BullObject : MonoBehaviour
         mGetAttackPoint = false;
         mAttackSet = false;
         mNowSetAttackTime = 0.0f;
+        mSpeedListCount = 0;
+        mSpeed = mSpeedOrigin;
     }
 
     // Update is called once per frame
@@ -256,7 +262,45 @@ public class BullObject : MonoBehaviour
 
     }
 
-    
+    void SpeedUp()
+    {
+        mSpeedListCount += 1;
+
+        if (mSpeedListCount < 5)
+        {
+            mSpeedMagnification = mSpeedList[mSpeedListCount];
+            mSpeed = mSpeedOrigin * mSpeedMagnification;
+
+        }
+        else
+        {
+            mSpeedMagnification += 0.5f;
+            mSpeed = mSpeedOrigin * mSpeedMagnification;
+
+        }
+    }
+
+    void SpeedDown()
+    {
+        if (mSpeedListCount > 0)
+        {
+            mSpeedListCount -= 1;
+        }
+
+        if (mSpeedListCount < 5)
+        {
+            mSpeedMagnification = mSpeedList[mSpeedListCount];
+            mSpeed = mSpeedOrigin * mSpeedMagnification;
+
+        }
+        else
+        {
+            mSpeedMagnification -= 0.5f;
+            mSpeed = mSpeedOrigin * mSpeedMagnification;
+
+        }
+    }
+
 
 }
 
