@@ -198,7 +198,7 @@ public class BullObject : MonoBehaviour
         {
             mSelectAttackPoint = target[Random.Range(1, 3)];
             mGetAttackPoint = true;
-            Debug.Log("ランダムゲット" + mSelectAttackPoint);
+            //Debug.Log("ランダムゲット" + mSelectAttackPoint);
         }
         // 突撃準備位置まで移動する
         else if (!mAttackSet && mSelectAttackPoint.transform.position != this.transform.position)
@@ -254,7 +254,7 @@ public class BullObject : MonoBehaviour
         {
             mAttackSet = false;
             mGetAttackPoint = false;
-            Debug.Log("凸完了" + mSelectAttackPoint);
+            //Debug.Log("凸完了" + mSelectAttackPoint);
 
             //状態遷移
             bullStatus = BULL_STATUS.SONAR;

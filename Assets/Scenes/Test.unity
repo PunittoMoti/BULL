@@ -1576,6 +1576,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1966553080}
+  - component: {fileID: 1966553081}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1600,6 +1601,86 @@ Transform:
   - {fileID: 295396137}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1966553081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966553079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd2e610aa764c004d846bb1fd358e295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mStickUp:
+    m_Name: M Stick Up
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: dc965208-3c4c-4f53-a6de-ba7b737fa44d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 8085e201-2589-41aa-bc82-1894cf0720e2
+      m_Path: <Gamepad>/rightStick/up
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Stick Up
+      m_Flags: 0
+    m_Flags: 0
+  mStickRight:
+    m_Name: M Stick Right
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7da5e20f-23d6-40f2-840d-06f47a75b65d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 449556bf-12ff-4664-86fa-5c02014a6000
+      m_Path: <Gamepad>/rightStick/right
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Stick Right
+      m_Flags: 0
+    m_Flags: 0
+  mStickDwon:
+    m_Name: M Stick Dwon
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2d4d9e7b-ff53-4c29-b6fa-456fdc74e2e4
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 677d00f5-4507-4c37-bdfa-a8d875fbce89
+      m_Path: <Gamepad>/rightStick/down
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Stick Dwon
+      m_Flags: 0
+    m_Flags: 0
+  mStickLeft:
+    m_Name: M Stick Left
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 80b143c7-4668-4d35-8fd1-4110701265de
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 17637d8e-771f-4e6f-9f5b-03d04f28acb8
+      m_Path: <Gamepad>/rightStick/left
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Stick Left
+      m_Flags: 0
+    m_Flags: 0
 --- !u!1 &2089785685
 GameObject:
   m_ObjectHideFlags: 0
