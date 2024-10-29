@@ -82,6 +82,14 @@ public class PlayerObject : MonoBehaviour
             Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
+        //右上
+        else if (mStickValueRight == 1.0f && mStickValueUp == 1.0f)
+        {
+            mStickStatus = STICK_STATUS.RIGHTUP;
+            // 入力値をログ出力
+            Debug.Log($"ステックの状態 : {mStickStatus}");
+
+        }
         //右
         else if (mStickValueRight == 1.0f && mStickValueUp == 0.0f && mStickValueDwon == 0.0f)
         {
@@ -90,10 +98,26 @@ public class PlayerObject : MonoBehaviour
             Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
+        //右下
+        else if (mStickValueRight == 1.0f && mStickValueDwon == 1.0f)
+        {
+            mStickStatus = STICK_STATUS.RIGHTDWON;
+            // 入力値をログ出力
+            Debug.Log($"ステックの状態 : {mStickStatus}");
+
+        }
         //下
-        else if(mStickValueDwon == 1.0f && mStickValueRight == 0.0f && mStickValueLeft == 0.0f)
+        else if (mStickValueDwon == 1.0f && mStickValueRight == 0.0f && mStickValueLeft == 0.0f)
         {
             mStickStatus = STICK_STATUS.DWON;
+            // 入力値をログ出力
+            Debug.Log($"ステックの状態 : {mStickStatus}");
+
+        }
+        //左下
+        else if (mStickValueLeft == 1.0f && mStickValueDwon == 1.0f)
+        {
+            mStickStatus = STICK_STATUS.LEFTDWON;
             // 入力値をログ出力
             Debug.Log($"ステックの状態 : {mStickStatus}");
 
@@ -102,6 +126,14 @@ public class PlayerObject : MonoBehaviour
         else if (mStickValueLeft == 1.0f && mStickValueUp == 0.0f && mStickValueDwon == 0.0f)
         {
             mStickStatus = STICK_STATUS.LEFT;
+            // 入力値をログ出力
+            Debug.Log($"ステックの状態 : {mStickStatus}");
+
+        }
+        //左上
+        else if (mStickValueLeft == 1.0f && mStickValueUp == 1.0f)
+        {
+            mStickStatus = STICK_STATUS.LEFTUP;
             // 入力値をログ出力
             Debug.Log($"ステックの状態 : {mStickStatus}");
 
