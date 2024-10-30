@@ -70,6 +70,7 @@ public class PlayerObject : MonoBehaviour
         mStickValueLeft = mStickLeft.ReadValue<float>();
 
         StickInput();
+
     }
 
     void StickInput()
