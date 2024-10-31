@@ -2,23 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static SValue;
 
 public class PlayerObject : MonoBehaviour
 {
-    private enum STICK_STATUS
-    {
-        NOTINPUT,//入力なし
-        UP,//上
-        RIGHTUP,//右斜め上
-        RIGHT,//右
-        RIGHTDWON,//右斜め上
-        DWON,//下
-        LEFTDWON,//左
-        LEFT,//左
-        LEFTUP//左
-    }
-
-
     // Actionをインスペクターから編集できるようにする
     [SerializeField] private InputAction mStickUp;
     [SerializeField] private InputAction mStickRight;
@@ -70,7 +57,6 @@ public class PlayerObject : MonoBehaviour
         mStickValueLeft = mStickLeft.ReadValue<float>();
 
         StickInput();
-
     }
 
     void StickInput()
@@ -145,4 +131,11 @@ public class PlayerObject : MonoBehaviour
         }
 
     }
+
+    //スティック入力状態取得
+    public STICK_STATUS GetmStickStatus()
+    {
+        return mStickStatus;
+    }
+
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static SValue;
 
 public class BullObject : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class BullObject : MonoBehaviour
         SONAR,//索敵
         SET_ATTACK,//突撃準備
         ATTACK,//突撃
+        CHECK_EVASION,//回避入力チェック
         EVASION,//回避後突撃
         STUN_ATTACK,//攻撃側スタン
         STUN_DAMAGE //攻撃された側のスタン
@@ -20,6 +22,7 @@ public class BullObject : MonoBehaviour
     private GameObject mSelectAttackPoint;
     private bool mGetAttackPoint;
     private bool mAttackSet;
+    private bool mCheckEvasion;
 
     private float mSpeed;
     private float mSpeedOrigin = 3.0f;
@@ -35,6 +38,7 @@ public class BullObject : MonoBehaviour
 
 
     private BULL_STATUS bullStatus = BULL_STATUS.SONAR;
+    private STICK_STATUS mCheckStickStatus;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +50,7 @@ public class BullObject : MonoBehaviour
         mNowSetAttackTime = 0.0f;
         mSpeedListCount = 0;
         mSpeed = mSpeedOrigin;
+        mCheckEvasion = false;
     }
 
     // Update is called once per frame
@@ -53,18 +58,30 @@ public class BullObject : MonoBehaviour
     {
         switch (bullStatus)
         {
+            //索敵
             case BULL_STATUS.SONAR:
+                transform.Find("Model").gameObject.GetComponent<Renderer>().material.color = Color.white;
                 TargetSonar();
                 break;
+            //突撃準備
             case BULL_STATUS.SET_ATTACK:
                 SetAttack();
                 break;
+            //突撃
             case BULL_STATUS.ATTACK:
                 Attack();
                 break;
-            case BULL_STATUS.EVASION:
+            //回避判定チェック
+            case BULL_STATUS.CHECK_EVASION:
+                EvasionCheck();
                 Attack();
                 break;
+            //回避後
+            case BULL_STATUS.EVASION:
+                transform.Find("Model").gameObject.GetComponent<Renderer>().material.color = Color.red;
+                Attack();
+                break;
+            //ぶつけられた時のスタン
             case BULL_STATUS.STUN_ATTACK:
                 if (mNowStunTime <= mAttackStunTime)
                 {
@@ -76,6 +93,7 @@ public class BullObject : MonoBehaviour
                     bullStatus = BULL_STATUS.SONAR;
                 }
                 break;
+            //ぶつかった時のスタン
             case BULL_STATUS.STUN_DAMAGE:
                 if (mNowStunTime <= mDamageStunTime)
                 {
@@ -87,28 +105,72 @@ public class BullObject : MonoBehaviour
                     bullStatus = BULL_STATUS.SONAR;
                 }
                 break;
-
         }
 
     }
 
+    //当たった瞬間
     void OnTriggerEnter(Collider collision)
     {
-        if(collision.gameObject.name == "BULL")
+        switch (bullStatus)
         {
-            switch (bullStatus)
-            {
-                case BULL_STATUS.ATTACK:
+            case BULL_STATUS.ATTACK:
+                if (collision.gameObject.name == "BULL")
+                {
                     Debug.Log("ATK");
                     bullStatus = BULL_STATUS.STUN_DAMAGE;
-                    break;
-                case BULL_STATUS.EVASION:
+
+                }
+                break;
+            case BULL_STATUS.EVASION:
+                if (collision.gameObject.name == "BULL")
+                {
                     Debug.Log("EVASION");
                     bullStatus = BULL_STATUS.STUN_ATTACK;
-                    break;
-            }
+
+                }
+                break;
+        }
+       
+
+
+
+    }
+
+    //当たり続けている間
+    void OnTriggerStay(Collider collision)
+    {
+        switch (bullStatus)
+        {
+            case BULL_STATUS.ATTACK:
+                if (collision.gameObject.name == "Player")
+                {
+                    //プレイヤーの入力がBULLが持っている受付入力と一致していれば
+                    if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == mCheckStickStatus)
+                    {
+                        bullStatus = BULL_STATUS.CHECK_EVASION;
+                        mCheckEvasion = true;
+                    }
+                }
+                break;
         }
     }
+
+    //離れたとき
+    void OnTriggerExit(Collider collision)
+    {
+        switch (bullStatus)
+        {
+            case BULL_STATUS.CHECK_EVASION:
+                if (collision.gameObject.name == "Player")
+                {
+                    mCheckEvasion = false;
+                    bullStatus = BULL_STATUS.ATTACK;
+                }
+                break;
+        }
+    }
+
 
     void TargetSonar()
     {
@@ -198,7 +260,10 @@ public class BullObject : MonoBehaviour
         {
             mSelectAttackPoint = target[Random.Range(1, 3)];
             mGetAttackPoint = true;
-            //Debug.Log("ランダムゲット" + mSelectAttackPoint);
+            //対応する回避入力を取得
+            mCheckStickStatus = mSelectAttackPoint.GetComponent<AttackPointObject>().GetAnswerStickStatusNormal();
+
+            Debug.Log("対応回避入力：" + mCheckStickStatus);
         }
         // 突撃準備位置まで移動する
         else if (!mAttackSet && mSelectAttackPoint.transform.position != this.transform.position)
@@ -216,12 +281,12 @@ public class BullObject : MonoBehaviour
             mNowSetAttackTime = 0.0f;
         }
         //突撃準備位置で準備時間分待機する
-        else if (mAttackSet && mNowSetAttackTime <= mSetAttackTime)
+        else if (mAttackSet && mNowSetAttackTime <= mSetAttackTime / mSpeedMagnification)
         {
             mNowSetAttackTime += Time.deltaTime;
         }
         //突撃準備完了+突撃目標取得
-        else if (mAttackSet && mNowSetAttackTime >= mSetAttackTime)
+        else if (mAttackSet && mNowSetAttackTime >= mSetAttackTime / mSpeedMagnification)
         {
             //移動先Objectを取得
             AttackPointObject instantAttackPointObject;
@@ -297,6 +362,73 @@ public class BullObject : MonoBehaviour
         {
             mSpeedMagnification -= 0.5f;
             mSpeed = mSpeedOrigin * mSpeedMagnification;
+
+        }
+    }
+
+    void EvasionCheck()
+    {
+        if (!mCheckEvasion) return;
+
+        switch (mCheckStickStatus)
+        {
+            case STICK_STATUS.UP:
+                if(mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.DWON)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.RIGHTUP:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.LEFTDWON)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.RIGHT:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.LEFT)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.RIGHTDWON:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.LEFTUP)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.DWON:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.UP)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.LEFTDWON:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.RIGHTUP)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.LEFT:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.RIGHT)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+            case STICK_STATUS.LEFTUP:
+                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.RIGHTDWON)
+                {
+                    SpeedUp();
+                    bullStatus = BULL_STATUS.EVASION;
+                }
+                break;
+
 
         }
     }

@@ -1,25 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static SValue;
 
 public class AttackPointObject : MonoBehaviour
 {
-    [SerializeField] private GameObject mAttackEndPoint; 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField] private GameObject mAttackEndPoint;
+    [SerializeField] private STICK_STATUS mAnswerStickStatusNormal;
 
     public GameObject GetAttackEndPoint()
     {
         return mAttackEndPoint;
+    }
+
+    public STICK_STATUS GetAnswerStickStatusNormal()
+    {
+        return mAnswerStickStatusNormal;
     }
 }
