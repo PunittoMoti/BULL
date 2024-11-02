@@ -35,10 +35,14 @@ public class BullObject : MonoBehaviour
 
     private float[] mSpeedList = new float[] { 1, 1.1f, 1.3f, 1.6f, 2.0f };
     private int mSpeedListCount;
+    private int mStickStatuStackCount;
+
 
 
     private BULL_STATUS bullStatus = BULL_STATUS.SONAR;
     private STICK_STATUS mCheckStickStatus;
+    private STICK_STATUS[] mCheckStickStatuStack;
+
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +55,7 @@ public class BullObject : MonoBehaviour
         mSpeedListCount = 0;
         mSpeed = mSpeedOrigin;
         mCheckEvasion = false;
+        mStickStatuStackCount = 0;
     }
 
     // Update is called once per frame
@@ -73,6 +78,7 @@ public class BullObject : MonoBehaviour
                 break;
             //回避判定チェック
             case BULL_STATUS.CHECK_EVASION:
+                StackStickInputStack();
                 EvasionCheck();
                 Attack();
                 break;
@@ -149,6 +155,11 @@ public class BullObject : MonoBehaviour
                     if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == mCheckStickStatus)
                     {
                         bullStatus = BULL_STATUS.CHECK_EVASION;
+                        //スティック入力状態初期化
+                        mCheckStickStatuStack = new STICK_STATUS[8];
+                        mCheckStickStatuStack[0] = mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus();
+                        mStickStatuStackCount = 0;
+                        Debug.Log("スタック[" + mStickStatuStackCount + "]:" + mCheckStickStatuStack[mStickStatuStackCount]);
                         mCheckEvasion = true;
                     }
                 }
@@ -370,59 +381,72 @@ public class BullObject : MonoBehaviour
     {
         if (!mCheckEvasion) return;
 
-        switch (mCheckStickStatus)
+        PlayerObject playerObject = mPrayer.gameObject.GetComponent<PlayerObject>();
+
+        switch (mCheckStickStatuStack[0])
         {
             case STICK_STATUS.UP:
-                if(mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.DWON)
+
+                if(mCheckStickStatuStack[1] == STICK_STATUS.DWON)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
-                break;
+                else if(mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[1] == STICK_STATUS.RIGHT)
+                {
+
+                }
+                else if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[1] == STICK_STATUS.LEFT)
+                {
+
+                }
+
+
+                    break;
             case STICK_STATUS.RIGHTUP:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.LEFTDWON)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.LEFTDWON)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 break;
             case STICK_STATUS.RIGHT:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.LEFT)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.LEFT)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 break;
             case STICK_STATUS.RIGHTDWON:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.LEFTUP)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.LEFTUP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 break;
             case STICK_STATUS.DWON:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.UP)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.UP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 break;
             case STICK_STATUS.LEFTDWON:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.RIGHTUP)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.RIGHTUP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 break;
             case STICK_STATUS.LEFT:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.RIGHT)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.RIGHT)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 break;
             case STICK_STATUS.LEFTUP:
-                if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == STICK_STATUS.RIGHTDWON)
+                if (playerObject.GetmStickStatus() == STICK_STATUS.RIGHTDWON)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -430,6 +454,21 @@ public class BullObject : MonoBehaviour
                 break;
 
 
+        }
+    }
+
+    void StackStickInputStack()
+    {
+        PlayerObject playerObject = mPrayer.gameObject.GetComponent<PlayerObject>();
+
+        //最新にスタックされている状態と違うかつスティック入力状態が中央でなければ
+        if (playerObject.GetmStickStatus() != mCheckStickStatuStack[mStickStatuStackCount] && playerObject.GetmStickStatus() != STICK_STATUS.NOTINPUT)
+        {
+            //スタックカウント上昇
+            mStickStatuStackCount += 1;
+            //次に入力された状態を取得
+            mCheckStickStatuStack[mStickStatuStackCount] = playerObject.GetmStickStatus();
+            Debug.Log("スタック[" + mStickStatuStackCount + "]:" + mCheckStickStatuStack[mStickStatuStackCount]);
         }
     }
 

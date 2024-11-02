@@ -66,7 +66,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.UP;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //右上
@@ -74,7 +73,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.RIGHTUP;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //右
@@ -82,7 +80,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.RIGHT;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //右下
@@ -90,7 +87,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.RIGHTDWON;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //下
@@ -98,7 +94,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.DWON;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //左下
@@ -106,7 +101,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.LEFTDWON;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //左
@@ -114,7 +108,6 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.LEFT;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         //左上
@@ -122,13 +115,17 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.LEFTUP;
             // 入力値をログ出力
-            Debug.Log($"ステックの状態 : {mStickStatus}");
 
         }
         else
         {
             mStickStatus = STICK_STATUS.NOTINPUT;
         }
+        if(mStickStatus != STICK_STATUS.NOTINPUT)
+        {
+            //Debug.Log($"ステックの状態 : {mStickStatus}");
+        }
+
 
     }
 
