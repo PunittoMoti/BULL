@@ -21,6 +21,7 @@ public class BullObject : MonoBehaviour
     private GameObject mAttackPoints;
     private GameObject[] target;
     private GameObject mSelectAttackPoint;
+    private GameObject mSelectAttackEndPoint;
     private bool mGetAttackPoint;
     private bool mAttackSet;
     private bool mCheckEvasion;
@@ -80,8 +81,8 @@ public class BullObject : MonoBehaviour
             //回避判定チェック
             case BULL_STATUS.CHECK_EVASION:
                 StackStickInputStack();
-                EvasionCheck();
                 Attack();
+                EvasionCheck();
                 break;
             //回避後
             case BULL_STATUS.EVASION:
@@ -317,7 +318,7 @@ public class BullObject : MonoBehaviour
             //移動先Objectを取得
             AttackPointObject instantAttackPointObject;
             instantAttackPointObject = mSelectAttackPoint.GetComponent<AttackPointObject>();
-            mSelectAttackPoint = instantAttackPointObject.GetAttackEndPoint();
+            mSelectAttackEndPoint = instantAttackPointObject.GetAttackEndPoint();
 
             //フラグ初期化
             mGetAttackPoint = false;
@@ -332,16 +333,16 @@ public class BullObject : MonoBehaviour
     void Attack()
     {
         //突撃中
-        if (mSelectAttackPoint.transform.position != this.transform.position)
+        if (mSelectAttackEndPoint.transform.position != this.transform.position)
         {
             //スタート位置、ターゲットの座標、速度
             transform.position = Vector3.MoveTowards(
               transform.position,
-              mSelectAttackPoint.transform.position,
+              mSelectAttackEndPoint.transform.position,
               mSpeed * Time.deltaTime);
         }
         //突撃完了
-        else if (mSelectAttackPoint.transform.position == this.transform.position)
+        else if (mSelectAttackEndPoint.transform.position == this.transform.position)
         {
             mAttackSet = false;
             mGetAttackPoint = false;
@@ -409,79 +410,17 @@ public class BullObject : MonoBehaviour
                 }
                 else
                 {
-                    int count = 0;
-                    int listCount = 0;
                     STICK_STATUS[,] checkList = new STICK_STATUS[2,3] { { STICK_STATUS.RIGHT, STICK_STATUS.DWON, STICK_STATUS.LEFT } , { STICK_STATUS.LEFT, STICK_STATUS.DWON, STICK_STATUS.RIGHT } };
 
                     //時計回りの回転回避アクションの場合
                     if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[2] == STICK_STATUS.RIGHT)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[0, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-                            }
-                            else if(mCheckStickStatuStack[i]== STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-
-                        if (listCount >= 3)
-
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count >= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
+                        RollEvasion(checkList);
                     }
                     //反時計回りの回転回避アクションの場合
                     else if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[2] == STICK_STATUS.LEFT)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[1, listCount])
-                            {
-                                listCount++;
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-                        if (listCount >= 3)
-
-                        {
-                            Debug.Log("回転回避成功");
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count >= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
-
+                        ReverseRollEvasion(checkList);
                     }
 
                 }
@@ -492,6 +431,22 @@ public class BullObject : MonoBehaviour
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
+                else
+                {
+                    STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.RIGHTDWON, STICK_STATUS.LEFTDWON, STICK_STATUS.LEFTUP }, { STICK_STATUS.LEFTUP, STICK_STATUS.LEFT, STICK_STATUS.RIGHTDWON } };
+
+                    //時計回りの回転回避アクションの場合
+                    if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[2] == STICK_STATUS.RIGHTDWON)
+                    {
+                        RollEvasion(checkList);
+                    }
+                    //反時計回りの回転回避アクションの場合
+                    else if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP || mCheckStickStatuStack[2] == STICK_STATUS.LEFTUP)
+                    {
+                        ReverseRollEvasion(checkList);
+                    }
+
+                }
                 break;
             case STICK_STATUS.RIGHT:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT)
@@ -501,90 +456,42 @@ public class BullObject : MonoBehaviour
                 }
                 else
                 {
-                    int count = 0;
-                    int listCount = 0;
                     STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.DWON, STICK_STATUS.LEFT, STICK_STATUS.UP }, { STICK_STATUS.UP, STICK_STATUS.LEFT, STICK_STATUS.DWON } };
 
                     //時計回りの回転回避アクションの場合
                     if (mCheckStickStatuStack[1] == STICK_STATUS.DWON || mCheckStickStatuStack[2] == STICK_STATUS.DWON)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[0, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-
-                        if (listCount <= 3)
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count <= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
-
+                        RollEvasion(checkList);
                     }
                     //反時計回りの回転回避アクションの場合
                     else if (mCheckStickStatuStack[1] == STICK_STATUS.UP || mCheckStickStatuStack[2] == STICK_STATUS.UP)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[1, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-                        if (listCount <= 3)
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count <= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
-
+                        ReverseRollEvasion(checkList);
                     }
 
                 }
-
                 break;
             case STICK_STATUS.RIGHTDWON:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
+                }
+                else
+                {
+                    STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.LEFTDWON, STICK_STATUS.LEFTUP, STICK_STATUS.RIGHTUP }, { STICK_STATUS.RIGHTUP, STICK_STATUS.LEFTUP, STICK_STATUS.LEFTDWON } };
+
+                    //時計回りの回転回避アクションの場合
+                    if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON || mCheckStickStatuStack[2] == STICK_STATUS.LEFTDWON)
+                    {
+                        RollEvasion(checkList);
+                    }
+                    //反時計回りの回転回避アクションの場合
+                    else if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP || mCheckStickStatuStack[2] == STICK_STATUS.RIGHTUP)
+                    {
+                        ReverseRollEvasion(checkList);
+                    }
+
                 }
                 break;
             case STICK_STATUS.DWON:
@@ -593,95 +500,46 @@ public class BullObject : MonoBehaviour
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
                 }
+
                 else
                 {
-                    int count = 0;
-                    int listCount = 0;
                     STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.LEFT, STICK_STATUS.UP, STICK_STATUS.RIGHT }, { STICK_STATUS.RIGHT, STICK_STATUS.UP, STICK_STATUS.LEFT } };
 
                     //時計回りの回転回避アクションの場合
                     if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[2] == STICK_STATUS.LEFT)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[0, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-
-                        if (listCount >= 3)
-
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count >= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
-
+                        RollEvasion(checkList);
                     }
                     //反時計回りの回転回避アクションの場合
                     else if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[2] == STICK_STATUS.RIGHT)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[1, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-                        if (listCount >= 3)
-
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count >= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
-
+                        ReverseRollEvasion(checkList);
                     }
 
                 }
-
                 break;
             case STICK_STATUS.LEFTDWON:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
+                }
+                else
+                {
+                    STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.LEFTUP, STICK_STATUS.RIGHTUP, STICK_STATUS.RIGHTDWON }, { STICK_STATUS.RIGHTDWON, STICK_STATUS.LEFTDWON, STICK_STATUS.LEFTUP } };
+
+                    //時計回りの回転回避アクションの場合
+                    if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP || mCheckStickStatuStack[2] == STICK_STATUS.LEFTUP)
+                    {
+                        RollEvasion(checkList);
+                    }
+                    //反時計回りの回転回避アクションの場合
+                    else if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[2] == STICK_STATUS.RIGHTDWON)
+                    {
+                        ReverseRollEvasion(checkList);
+
+                    }
+
                 }
                 break;
             case STICK_STATUS.LEFT:
@@ -692,82 +550,17 @@ public class BullObject : MonoBehaviour
                 }
                 else
                 {
-                    int count = 0;
-                    int listCount = 0;
                     STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.UP, STICK_STATUS.RIGHT, STICK_STATUS.DWON }, { STICK_STATUS.DWON, STICK_STATUS.RIGHT, STICK_STATUS.UP } };
 
                     //時計回りの回転回避アクションの場合
                     if (mCheckStickStatuStack[1] == STICK_STATUS.UP || mCheckStickStatuStack[2] == STICK_STATUS.UP)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[0, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-
-                        if (listCount >= 3)
-
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count >= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
-
+                        RollEvasion(checkList);
                     }
                     //反時計回りの回転回避アクションの場合
                     else if (mCheckStickStatuStack[1] == STICK_STATUS.DWON || mCheckStickStatuStack[2] == STICK_STATUS.DWON)
                     {
-                        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
-                        {
-                            if (mCheckStickStatuStack[i] == checkList[1, listCount])
-                            {
-                                listCount++;
-                                count = 0;
-
-                            }
-                            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                count++;
-                            }
-
-                        }
-
-                        if (listCount >= 3)
-
-                        {
-                            Debug.Log("回転回避成功");
-
-                            SpeedUp();
-                            bullStatus = BULL_STATUS.EVASION;
-                        }
-
-                        if (count >= 2)
-                        {
-                            bullStatus = BULL_STATUS.FAILUREEVASION;
-                        }
+                        ReverseRollEvasion(checkList);
 
                     }
 
@@ -780,6 +573,23 @@ public class BullObject : MonoBehaviour
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
+                }
+                else
+                {
+                    STICK_STATUS[,] checkList = new STICK_STATUS[2, 3] { { STICK_STATUS.RIGHTUP, STICK_STATUS.RIGHTDWON, STICK_STATUS.LEFTDWON }, { STICK_STATUS.LEFTDWON, STICK_STATUS.RIGHTDWON, STICK_STATUS.RIGHTUP } };
+
+                    //時計回りの回転回避アクションの場合
+                    if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP || mCheckStickStatuStack[2] == STICK_STATUS.RIGHTUP)
+                    {
+                        RollEvasion(checkList);
+                    }
+                    //反時計回りの回転回避アクションの場合
+                    else if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON || mCheckStickStatuStack[2] == STICK_STATUS.LEFTDWON)
+                    {
+                        ReverseRollEvasion(checkList);
+
+                    }
+
                 }
                 break;
 
@@ -802,7 +612,91 @@ public class BullObject : MonoBehaviour
         }
     }
 
+    void RollEvasion(STICK_STATUS[,] checkList)
+    {
+        int count = 0;
+        int listCount = 0;
+        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
+        {
+            if (mCheckStickStatuStack[i] == checkList[0, listCount])
+            {
+                listCount++;
+                count = 0;
+            }
+            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
+            {
+                break;
+            }
+            else
+            {
+                count++;
+            }
 
+        }
+
+
+        if (listCount >= 3)
+
+        {
+            Debug.Log("回転回避成功:"+ mSelectAttackPoint);
+
+            //進行方向変更
+            AttackPointObject instantAttackPointObject;
+            instantAttackPointObject = mSelectAttackPoint.GetComponent<AttackPointObject>();
+            mSelectAttackEndPoint = instantAttackPointObject.GetRollEvasionEndPoint();
+            //スピードアップ
+            SpeedUp();
+            bullStatus = BULL_STATUS.EVASION;
+        }
+
+        if (count >= 2)
+        {
+            bullStatus = BULL_STATUS.FAILUREEVASION;
+        }
+    }
+
+    void ReverseRollEvasion(STICK_STATUS[,] checkList)
+    {
+        int count = 0;
+        int listCount = 0;
+        for (int i = 1; i < mCheckStickStatuStack.Length && count < 2 && listCount < 3; i++)
+        {
+            if (mCheckStickStatuStack[i] == checkList[0, listCount])
+            {
+                listCount++;
+                count = 0;
+            }
+            else if (mCheckStickStatuStack[i] == STICK_STATUS.NOTINPUT)
+            {
+                break;
+            }
+            else
+            {
+                count++;
+            }
+
+        }
+
+
+        if (listCount >= 3)
+
+        {
+            Debug.Log("回転回避成功:" + mSelectAttackPoint);
+
+            //進行方向変更
+            AttackPointObject instantAttackPointObject;
+            instantAttackPointObject = mSelectAttackPoint.GetComponent<AttackPointObject>();
+            mSelectAttackEndPoint = instantAttackPointObject.GetReverseRollEvasionAttackEndPoint();
+            //スピードアップ
+            SpeedUp();
+            bullStatus = BULL_STATUS.EVASION;
+        }
+
+        if (count >= 2)
+        {
+            bullStatus = BULL_STATUS.FAILUREEVASION;
+        }
+    }
 }
 
 /*

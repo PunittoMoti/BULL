@@ -170,6 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 685333353}
+  mRollEvasionEndPoint: {fileID: 120686851}
+  mReverseRollEvasionAttackEndPoint: {fileID: 243786553}
   mAnswerStickStatusNormal: 8
 --- !u!65 &16813314
 BoxCollider:
@@ -275,6 +277,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 2089785685}
+  mRollEvasionEndPoint: {fileID: 73052666}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &73052668
 BoxCollider:
@@ -410,6 +414,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 2089785685}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &120686854
 BoxCollider:
@@ -530,6 +536,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 243786553}
+  mRollEvasionEndPoint: {fileID: 685333353}
+  mReverseRollEvasionAttackEndPoint: {fileID: 1958700784}
   mAnswerStickStatusNormal: 6
 --- !u!65 &175268944
 BoxCollider:
@@ -721,6 +729,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 2089785685}
+  mRollEvasionEndPoint: {fileID: 291374439}
+  mReverseRollEvasionAttackEndPoint: {fileID: 1736708312}
   mAnswerStickStatusNormal: 1
 --- !u!1 &226938472
 GameObject:
@@ -862,6 +872,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 2089785685}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &243786556
 BoxCollider:
@@ -967,6 +979,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 1736708312}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &291374441
 BoxCollider:
@@ -1141,6 +1155,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 2089785685}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &685333356
 BoxCollider:
@@ -1332,6 +1348,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 1736708312}
+  mRollEvasionEndPoint: {fileID: 73052666}
+  mReverseRollEvasionAttackEndPoint: {fileID: 2089785685}
   mAnswerStickStatusNormal: 3
 --- !u!1 &1368229746
 GameObject:
@@ -1464,6 +1482,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 120686851}
+  mRollEvasionEndPoint: {fileID: 1958700784}
+  mReverseRollEvasionAttackEndPoint: {fileID: 685333353}
   mAnswerStickStatusNormal: 2
 --- !u!65 &1497226364
 BoxCollider:
@@ -1694,6 +1714,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 291374439}
+  mRollEvasionEndPoint: {fileID: 2089785685}
+  mReverseRollEvasionAttackEndPoint: {fileID: 73052666}
   mAnswerStickStatusNormal: 7
 --- !u!1 &1688402474
 GameObject:
@@ -1814,6 +1836,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 73052666}
+  mRollEvasionEndPoint: {fileID: 291374439}
+  mReverseRollEvasionAttackEndPoint: {fileID: 1736708312}
   mAnswerStickStatusNormal: 5
 --- !u!1 &1736708312
 GameObject:
@@ -1863,6 +1887,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 291374439}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &1736708315
 BoxCollider:
@@ -1983,6 +2009,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 1958700784}
+  mRollEvasionEndPoint: {fileID: 243786553}
+  mReverseRollEvasionAttackEndPoint: {fileID: 120686851}
   mAnswerStickStatusNormal: 4
 --- !u!65 &1754428540
 BoxCollider:
@@ -2470,6 +2498,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 2089785685}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &1958700787
 BoxCollider:
@@ -2726,6 +2756,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mAttackEndPoint: {fileID: 73052666}
+  mRollEvasionEndPoint: {fileID: 0}
+  mReverseRollEvasionAttackEndPoint: {fileID: 0}
   mAnswerStickStatusNormal: 0
 --- !u!65 &2089785688
 BoxCollider:
