@@ -135,6 +135,27 @@ public class BullObject : MonoBehaviour
                     bullStatus = BULL_STATUS.STUN_DAMAGE;
 
                 }
+
+                if (!mPrayer.gameObject.GetComponent<PlayerObject>().GetPlayerControlFlag())
+                {
+                    if (collision.gameObject.name == "OutArea")
+                    {
+                        //プレイヤーのスタンフラグ有効化
+                        mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        bullStatus = BULL_STATUS.FAILUREEVASION;
+                    }
+                }
+                break;
+            case BULL_STATUS.CHECK_EVASION:
+                if (!mPrayer.gameObject.GetComponent<PlayerObject>().GetPlayerControlFlag())
+                {
+                    if (collision.gameObject.name == "OutArea")
+                    {
+                        //プレイヤーのスタンフラグ有効化
+                        mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        bullStatus = BULL_STATUS.FAILUREEVASION;
+                    }
+                }
                 break;
             case BULL_STATUS.EVASION:
                 if (collision.gameObject.name == "BULL")

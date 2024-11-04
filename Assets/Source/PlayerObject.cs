@@ -13,11 +13,17 @@ public class PlayerObject : MonoBehaviour
     [SerializeField] private InputAction mStickLeft;
 
 
+
+
     private STICK_STATUS mStickStatus;
+    [SerializeField] private float mMaxStunTime;
+    private float mNowStunTime;
     private float mStickValueUp;
     private float mStickValueRight;
     private float mStickValueDwon;
     private float mStickValueLeft;
+
+    private bool mIsControl; 
 
 
     // 有効化
@@ -46,17 +52,37 @@ public class PlayerObject : MonoBehaviour
     void Start()
     {
         mStickStatus = STICK_STATUS.NOTINPUT;
+        mIsControl = false;
+        mNowStunTime = 0.0f;
     }
 
     private void Update()
     {
-        // ステックの入力値を読み込む
-        mStickValueUp = mStickUp.ReadValue<float>();
-        mStickValueRight = mStickRight.ReadValue<float>();
-        mStickValueDwon = mStickDwon.ReadValue<float>();
-        mStickValueLeft = mStickLeft.ReadValue<float>();
+        if (!mIsControl)
+        {
+            // ステックの入力値を読み込む
+            mStickValueUp = mStickUp.ReadValue<float>();
+            mStickValueRight = mStickRight.ReadValue<float>();
+            mStickValueDwon = mStickDwon.ReadValue<float>();
+            mStickValueLeft = mStickLeft.ReadValue<float>();
+            StickInput();
+        }
+        else
+        {
+            if(mNowStunTime>= mMaxStunTime)
+            {
+                Debug.Log("無敵終了");
+                mNowStunTime = 0.0f;
+                mIsControl = false;
+            }
+            else
+            {
+                mNowStunTime += Time.deltaTime;
+            }
+        }
 
-        StickInput();
+
+
     }
 
     void StickInput()
@@ -133,6 +159,18 @@ public class PlayerObject : MonoBehaviour
     public STICK_STATUS GetmStickStatus()
     {
         return mStickStatus;
+    }
+
+    public bool GetPlayerControlFlag()
+    {
+        return mIsControl;
+    }
+
+    //回避失敗時のプレイヤースタン
+    public void StunPlayer()
+    {
+        Debug.Log("回避不能");
+        mIsControl = true;
     }
 
 }
