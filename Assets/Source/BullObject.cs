@@ -150,6 +150,7 @@ public class BullObject : MonoBehaviour
                     {
                         //プレイヤーのスタンフラグ有効化
                         mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        SpeedDown();
                         bullStatus = BULL_STATUS.FAILUREEVASION;
                     }
                 }
@@ -161,6 +162,7 @@ public class BullObject : MonoBehaviour
                     {
                         //プレイヤーのスタンフラグ有効化
                         mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        SpeedDown();
                         bullStatus = BULL_STATUS.FAILUREEVASION;
                     }
                 }
@@ -172,6 +174,7 @@ public class BullObject : MonoBehaviour
                     {
                         //プレイヤーのスタンフラグ有効化
                         mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        SpeedDown();
                         bullStatus = BULL_STATUS.FAILUREEVASION;
                     }
                 }
@@ -466,7 +469,7 @@ public class BullObject : MonoBehaviour
         {
             case STICK_STATUS.UP:
 
-                if(mCheckStickStatuStack[1] == STICK_STATUS.DWON)
+                if(mCheckStickStatuStack[1] == STICK_STATUS.DWON || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -489,7 +492,7 @@ public class BullObject : MonoBehaviour
                 }
                 break;
             case STICK_STATUS.RIGHTUP:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON || mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[1] == STICK_STATUS.DWON)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -512,7 +515,7 @@ public class BullObject : MonoBehaviour
                 }
                 break;
             case STICK_STATUS.RIGHT:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP || mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -535,7 +538,7 @@ public class BullObject : MonoBehaviour
                 }
                 break;
             case STICK_STATUS.RIGHTDWON:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP || mCheckStickStatuStack[1] == STICK_STATUS.UP || mCheckStickStatuStack[1] == STICK_STATUS.LEFT)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -558,7 +561,7 @@ public class BullObject : MonoBehaviour
                 }
                 break;
             case STICK_STATUS.DWON:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.UP)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.UP || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP || mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -582,7 +585,7 @@ public class BullObject : MonoBehaviour
                 }
                 break;
             case STICK_STATUS.LEFTDWON:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP || mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[1] == STICK_STATUS.UP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -606,7 +609,7 @@ public class BullObject : MonoBehaviour
                 }
                 break;
             case STICK_STATUS.LEFT:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHT)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -632,7 +635,7 @@ public class BullObject : MonoBehaviour
 
                 break;
             case STICK_STATUS.LEFTUP:
-                if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON)
+                if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[1] == STICK_STATUS.DWON || mCheckStickStatuStack[1] == STICK_STATUS.RIGHT)
                 {
                     SpeedUp();
                     bullStatus = BULL_STATUS.EVASION;
@@ -714,6 +717,7 @@ public class BullObject : MonoBehaviour
 
         if (count >= 2)
         {
+            SpeedDown();
             bullStatus = BULL_STATUS.FAILUREEVASION;
         }
     }
@@ -757,6 +761,7 @@ public class BullObject : MonoBehaviour
 
         if (count >= 2)
         {
+            SpeedDown();
             bullStatus = BULL_STATUS.FAILUREEVASION;
         }
     }
