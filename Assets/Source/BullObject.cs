@@ -11,6 +11,7 @@ public class BullObject : MonoBehaviour
         SET_ATTACK,//突撃準備
         ATTACK,//突撃
         CHECK_EVASION,//回避入力チェック
+        CHECK_JUSTEVASION,//ギリギリ回避入力チェック
         EVASION,//回避後突撃
         FAILUREEVASION,//回避失敗
         STUN_ATTACK,//攻撃側スタン
@@ -80,6 +81,13 @@ public class BullObject : MonoBehaviour
                 break;
             //回避判定チェック
             case BULL_STATUS.CHECK_EVASION:
+                StackStickInputStack();
+                Attack();
+                EvasionCheck();
+                break;
+            //回避判定チェック
+            case BULL_STATUS.CHECK_JUSTEVASION:
+                transform.Find("Model").gameObject.GetComponent<Renderer>().material.color = Color.gray;
                 StackStickInputStack();
                 Attack();
                 EvasionCheck();
@@ -157,6 +165,18 @@ public class BullObject : MonoBehaviour
                     }
                 }
                 break;
+            case BULL_STATUS.CHECK_JUSTEVASION:
+                if (!mPrayer.gameObject.GetComponent<PlayerObject>().GetPlayerControlFlag())
+                {
+                    if (collision.gameObject.name == "OutArea")
+                    {
+                        //プレイヤーのスタンフラグ有効化
+                        mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        bullStatus = BULL_STATUS.FAILUREEVASION;
+                    }
+                }
+                break;
+
             case BULL_STATUS.EVASION:
                 if (collision.gameObject.name == "BULL")
                 {
@@ -197,6 +217,28 @@ public class BullObject : MonoBehaviour
                         Debug.Log("スタック[" + mStickStatuStackCount + "]:" + mCheckStickStatuStack[mStickStatuStackCount]);
                         mCheckEvasion = true;
                     }
+                }
+
+                if (collision.gameObject.name == "JustArea")
+                {
+                    //プレイヤーの入力がBULLが持っている受付入力と一致していれば
+                    if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == mCheckStickStatus)
+                    {
+                        bullStatus = BULL_STATUS.CHECK_JUSTEVASION;
+                        //スティック入力状態初期化
+                        mCheckStickStatuStack = new STICK_STATUS[8];
+
+                        for (int i = 0; i < mCheckStickStatuStack.Length; i++)
+                        {
+                            mCheckStickStatuStack[i] = STICK_STATUS.NOTINPUT;
+                        }
+
+                        mCheckStickStatuStack[0] = mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus();
+                        mStickStatuStackCount = 0;
+                        Debug.Log("スタック[" + mStickStatuStackCount + "]:" + mCheckStickStatuStack[mStickStatuStackCount]);
+                        mCheckEvasion = true;
+                    }
+
                 }
                 break;
         }
