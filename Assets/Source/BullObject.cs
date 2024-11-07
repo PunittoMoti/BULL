@@ -5,7 +5,7 @@ using static SValue;
 
 public class BullObject : MonoBehaviour
 {
-    private enum BULL_STATUS
+    public enum BULL_STATUS
     {
         SONAR,//çıìG
         SET_ATTACK,//ìÀåÇèÄîı
@@ -87,6 +87,7 @@ public class BullObject : MonoBehaviour
                 break;
             //âÒîîªíËÉ`ÉFÉbÉN
             case BULL_STATUS.CHECK_JUSTEVASION:
+                Debug.Log("ÉMÉäÉMÉä");
                 transform.Find("Model").gameObject.GetComponent<Renderer>().material.color = Color.gray;
                 StackStickInputStack();
                 Attack();
@@ -139,8 +140,10 @@ public class BullObject : MonoBehaviour
             case BULL_STATUS.ATTACK:
                 if (collision.gameObject.name == "BULL")
                 {
-                    Debug.Log("ATK");
-                    bullStatus = BULL_STATUS.STUN_DAMAGE;
+                    if(collision.gameObject.GetComponent<BullObject>().GetBullStatus() == BULL_STATUS.EVASION)
+                    {
+                        bullStatus = BULL_STATUS.STUN_DAMAGE;
+                    }
 
                 }
 
@@ -183,8 +186,10 @@ public class BullObject : MonoBehaviour
             case BULL_STATUS.EVASION:
                 if (collision.gameObject.name == "BULL")
                 {
-                    Debug.Log("EVASION");
-                    bullStatus = BULL_STATUS.STUN_ATTACK;
+                    if (collision.gameObject.GetComponent<BullObject>().GetBullStatus() == BULL_STATUS.ATTACK)
+                    {
+                        bullStatus = BULL_STATUS.STUN_ATTACK;
+                    }
 
                 }
                 break;
@@ -764,6 +769,11 @@ public class BullObject : MonoBehaviour
             SpeedDown();
             bullStatus = BULL_STATUS.FAILUREEVASION;
         }
+    }
+
+    public BULL_STATUS GetBullStatus()
+    {
+        return bullStatus;
     }
 }
 
