@@ -1888,9 +1888,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44b6b30b129fb242aa24749209893f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mEndTime: 10
+  mEndTime: 30
   counter: {fileID: 778519653}
   scoreText: {fileID: 752661851}
+  mNormalScore: 10
+  mRollScore: 100
+  mReduceScore: 10
 --- !u!1 &1368229746
 GameObject:
   m_ObjectHideFlags: 0
@@ -2775,8 +2778,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b10e47fcccb376e4f86b41f1610e41b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mNormalScore: 0
-  mRollScore: 0
 --- !u!65 &1792555647
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2877,8 +2878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b10e47fcccb376e4f86b41f1610e41b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mNormalScore: 10
-  mRollScore: 100
 --- !u!4 &1806715502
 Transform:
   m_ObjectHideFlags: 0

@@ -8,9 +8,12 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private float mEndTime;
     private float mTime;
-    private int mScore;
+    public static int mScore;
     [SerializeField] TextMeshProUGUI counter;
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] private int mNormalScore;
+    [SerializeField] private int mRollScore;
+    [SerializeField] private int mReduceScore;
 
 
     // Start is called before the first frame update
@@ -47,9 +50,37 @@ public class GameManager : MonoBehaviour
         mScore = 0;
     }
 
-    public void AddScore(int add)
+    public void AddScoreNormal()
     {
-        mScore += add;
+        mScore += mNormalScore;
+
+        if (mScore >= 99999999)
+        {
+            mScore = 99999999;
+        }
+
+    }
+
+    public void AddScoreRoll()
+    {
+        mScore += mRollScore;
+
+        if (mScore >= 99999999)
+        {
+            mScore = 99999999;
+        }
+
+    }
+
+    public void ReduceScoreNormal()
+    {
+        mScore -= mNormalScore;
+
+        if (mScore <= 0)
+        {
+            mScore = 0;
+        }
+
     }
 
 }

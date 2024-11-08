@@ -70,6 +70,7 @@
     <Compile Include="Assets\Source\TargetSonar.cs" />
     <Compile Include="Assets\Source\SValue.cs" />
     <Compile Include="Assets\Source\BullAttack.cs" />
+    <Compile Include="Assets\Source\ResultGameManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -41,10 +41,6 @@ public class BullObject : MonoBehaviour
     private int mSpeedListCount;
     private int mStickStatuStackCount;
 
-    [SerializeField] private int mNormalScore;
-    [SerializeField] private int mRollScore;
-
-
 
     private BULL_STATUS bullStatus = BULL_STATUS.SONAR;
     private STICK_STATUS mCheckStickStatus;
@@ -481,7 +477,7 @@ public class BullObject : MonoBehaviour
 
                 if(mCheckStickStatuStack[1] == STICK_STATUS.DWON || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -504,7 +500,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.RIGHTUP:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON || mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[1] == STICK_STATUS.DWON)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -527,7 +523,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.RIGHT:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.LEFT || mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP || mCheckStickStatuStack[1] == STICK_STATUS.LEFTDWON)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -550,7 +546,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.RIGHTDWON:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP || mCheckStickStatuStack[1] == STICK_STATUS.UP || mCheckStickStatuStack[1] == STICK_STATUS.LEFT)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -573,7 +569,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.DWON:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.UP || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP || mCheckStickStatuStack[1] == STICK_STATUS.LEFTUP)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
 
@@ -597,7 +593,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.LEFTDWON:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP || mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[1] == STICK_STATUS.UP)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -621,7 +617,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.LEFT:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHT || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[1] == STICK_STATUS.RIGHTUP)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -647,7 +643,7 @@ public class BullObject : MonoBehaviour
             case STICK_STATUS.LEFTUP:
                 if (mCheckStickStatuStack[1] == STICK_STATUS.RIGHTDWON || mCheckStickStatuStack[1] == STICK_STATUS.DWON || mCheckStickStatuStack[1] == STICK_STATUS.RIGHT)
                 {
-                    mGameManager.GetComponent<GameManager>().AddScore(mNormalScore);
+                    mGameManager.GetComponent<GameManager>().AddScoreNormal();
                     bullStatus = BULL_STATUS.EVASION;
                 }
                 else
@@ -722,6 +718,7 @@ public class BullObject : MonoBehaviour
             mSelectAttackEndPoint = instantAttackPointObject.GetRollEvasionEndPoint();
             //スピードアップ
             SpeedUp();
+            mGameManager.GetComponent<GameManager>().AddScoreRoll();
             bullStatus = BULL_STATUS.EVASION;
         }
 
@@ -766,7 +763,7 @@ public class BullObject : MonoBehaviour
             mSelectAttackEndPoint = instantAttackPointObject.GetReverseRollEvasionAttackEndPoint();
             //スピードアップ
             SpeedUp();
-            mGameManager.GetComponent<GameManager>().AddScore(mRollScore);
+            mGameManager.GetComponent<GameManager>().AddScoreRoll();
             bullStatus = BULL_STATUS.EVASION;
         }
 
