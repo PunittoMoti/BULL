@@ -60,17 +60,19 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Source\GameManager.cs" />
-    <Compile Include="Assets\Source\InputDebug.cs" />
-    <Compile Include="Assets\Source\InputActionExample.cs" />
-    <Compile Include="Assets\Source\DistanceController.cs" />
-    <Compile Include="Assets\Source\PlayerObject.cs" />
-    <Compile Include="Assets\Source\BullObject.cs" />
-    <Compile Include="Assets\Source\AttackPointObject.cs" />
-    <Compile Include="Assets\Source\TargetSonar.cs" />
-    <Compile Include="Assets\Source\SValue.cs" />
-    <Compile Include="Assets\Source\BullAttack.cs" />
-    <Compile Include="Assets\Source\ResultGameManager.cs" />
+    <Compile Include="Assets\Source\old\DistanceController.cs" />
+    <Compile Include="Assets\Source\old\BullObject.cs" />
+    <Compile Include="Assets\Source\old\InputActionExample.cs" />
+    <Compile Include="Assets\Source\old\ResultGameManager.cs" />
+    <Compile Include="Assets\Source\old\InputDebug.cs" />
+    <Compile Include="Assets\Source\old\SValue.cs" />
+    <Compile Include="Assets\Source\old\PlayerObject.cs" />
+    <Compile Include="Assets\Source\old\TargetSonar.cs" />
+    <Compile Include="Assets\Source\old\AttackPointObject.cs" />
+    <Compile Include="Assets\Source\IMatador.cs" />
+    <Compile Include="Assets\Source\old\GameManager.cs" />
+    <Compile Include="Assets\Source\CPlayer.cs" />
+    <Compile Include="Assets\Source\old\BullAttack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
