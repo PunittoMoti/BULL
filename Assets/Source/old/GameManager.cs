@@ -40,7 +40,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-Å@Å@public void ResetTime()
+    public float GetTime()
+    {
+        return mTime;
+    }
+
+
+    public void ResetTime()
     {
         mTime = 0;
     }

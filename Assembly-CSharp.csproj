@@ -65,14 +65,17 @@
     <Compile Include="Assets\Source\old\InputActionExample.cs" />
     <Compile Include="Assets\Source\old\ResultGameManager.cs" />
     <Compile Include="Assets\Source\old\InputDebug.cs" />
-    <Compile Include="Assets\Source\old\SValue.cs" />
     <Compile Include="Assets\Source\old\PlayerObject.cs" />
     <Compile Include="Assets\Source\old\TargetSonar.cs" />
     <Compile Include="Assets\Source\old\AttackPointObject.cs" />
     <Compile Include="Assets\Source\IMatador.cs" />
+    <Compile Include="Assets\Source\SValue.cs" />
+    <Compile Include="Assets\Source\CBull.cs" />
     <Compile Include="Assets\Source\old\GameManager.cs" />
     <Compile Include="Assets\Source\CPlayer.cs" />
     <Compile Include="Assets\Source\old\BullAttack.cs" />
+    <Compile Include="Assets\Source\CreateBULL.cs" />
+    <Compile Include="Assets\Source\CNormalBull.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

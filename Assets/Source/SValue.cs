@@ -16,5 +16,4 @@ public class SValue
         LEFT,//ç∂
         LEFTUP//ç∂
     }
-
 }
