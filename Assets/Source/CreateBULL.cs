@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CreateBULL : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class CreateBULL : MonoBehaviour
             SpawnBull(mBulls[mSpawnCount]);
             mSpawnCount += 1;
         }
+
     }
 
     //ì¨ãçê∂ê¨
@@ -51,6 +53,13 @@ public class CreateBULL : MonoBehaviour
                 break;
         }
     }
+
+    void ResetBull()
+    {
+        mSpawnCount = 0;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
 
 }
 
