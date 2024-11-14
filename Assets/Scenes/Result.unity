@@ -482,6 +482,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 356029163}
+  mReturnButton:
+    m_Name: M Return Button
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 40bcc8a9-950a-4df0-93fb-2687bf84dd55
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 32319b56-3d3f-4bc6-8a11-ddd400c382d3
+      m_Path: <Gamepad>/buttonEast
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Return Button
+      m_Flags: 0
+    - m_Name: 
+      m_Id: e62067fe-a52c-4896-83a5-62c1af294e1f
+      m_Path: <Gamepad>/buttonNorth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Return Button
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 2c80939c-b71d-4660-b493-2fd31b4b3092
+      m_Path: <Gamepad>/buttonSouth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Return Button
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 6c45eefa-c10f-4140-9a67-e34236696b1b
+      m_Path: <Gamepad>/buttonWest
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: M Return Button
+      m_Flags: 0
+    m_Flags: 0
 --- !u!4 &1323213436
 Transform:
   m_ObjectHideFlags: 0
