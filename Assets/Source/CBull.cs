@@ -22,34 +22,34 @@ public class CBull : MonoBehaviour
     //共通変数(子クラスでも使用)
     protected GameObject mPrayer;//プレイヤー
     protected GameObject mGameManager;//ゲームマネージャー
-    private GameObject mAttackPoints;//全ての突撃位置
+    protected GameObject mAttackPoints;//全ての突撃位置
     protected GameObject[] target;//突撃位置候補
     protected GameObject mSelectAttackPoint;//選択された突撃位置
     protected GameObject mSelectAttackEndPoint;//突撃終了位置
 
 
 
-    private bool mGetAttackPoint;
-    private bool mAttackSet;
-    private bool mCheckEvasion;
+    protected bool mGetAttackPoint;
+    protected bool mAttackSet;
+    protected bool mCheckEvasion;
 
-    private float mSpeed;
-    private float mSpeedOrigin = 3.0f;
-    private float mSpeedMagnification = 1.0f;
-    private float mSetAttackTime = 3.0f;
-    private float mNowSetAttackTime;
-    private float mAttackStunTime = 5.0f;
-    private float mDamageStunTime = 3.0f;
-    private float mNowStunTime;
+    protected float mSpeed;
+    protected float mSpeedOrigin = 3.0f;
+    protected float mSpeedMagnification = 1.0f;
+    protected float mSetAttackTime = 3.0f;
+    protected float mNowSetAttackTime;
+    protected float mAttackStunTime = 5.0f;
+    protected float mDamageStunTime = 3.0f;
+    protected float mNowStunTime;
 
-    private float[] mSpeedList = new float[] { 1, 1.1f, 1.3f, 1.6f, 2.0f };
-    private int mSpeedListCount;
-    private int mStickStatuStackCount;
+    protected float[] mSpeedList = new float[] { 1, 1.1f, 1.3f, 1.6f, 2.0f };
+    protected int mSpeedListCount;
+    protected int mStickStatuStackCount;
 
 
-    private BULL_STATUS bullStatus = BULL_STATUS.SONAR;
-    private STICK_STATUS mCheckStickStatus;
-    private STICK_STATUS[] mCheckStickStatuStack;
+    protected BULL_STATUS bullStatus = BULL_STATUS.SONAR;
+    protected STICK_STATUS mCheckStickStatus;
+    protected STICK_STATUS[] mCheckStickStatuStack;
 
 
 
@@ -62,10 +62,17 @@ public class CBull : MonoBehaviour
         mPrayer = GameObject.Find("Player");
         mGameManager = GameObject.Find("GameManager");
         target = new GameObject[3];
+        mGetAttackPoint = false;
+        mAttackSet = false;
+        mNowSetAttackTime = 0.0f;
+        mSpeedListCount = 0;
+        mSpeed = mSpeedOrigin;
+        mCheckEvasion = false;
+        mStickStatuStackCount = 0;
     }
 
     //突撃位置索敵処理
-    void TargetSonar()
+    protected void TargetSonar()
     {
         /* ターゲットのポジションを取得 */
         Vector3 targetPos = this.transform.position;
@@ -148,11 +155,22 @@ public class CBull : MonoBehaviour
     }
 
     //突撃準備
-    void SetAttack()
+    protected void SetAttack()
     {
         if (!mGetAttackPoint)
         {
             mSelectAttackPoint = target[Random.Range(1, 3)];
+
+            if (mSelectAttackPoint.GetComponent<AttackPointObject>().GetIsUse())
+            {
+                //状態遷移
+                bullStatus = BULL_STATUS.SONAR;
+                return;
+            }
+
+            //準備Point使用中に変更
+            mSelectAttackPoint.GetComponent<AttackPointObject>().IsUseNo();
+
             mGetAttackPoint = true;
             //対応する回避入力を取得
             mCheckStickStatus = mSelectAttackPoint.GetComponent<AttackPointObject>().GetAnswerStickStatusNormal();
@@ -191,13 +209,16 @@ public class CBull : MonoBehaviour
             mGetAttackPoint = false;
             mAttackSet = false;
 
+            //準備Point使用中に変更
+            mSelectAttackPoint.GetComponent<AttackPointObject>().IsUseOFF();
+
             //状態遷移
             bullStatus = BULL_STATUS.ATTACK;
         }
 
     }
 
-    void SpeedUp()
+    protected void SpeedUp()
     {
         mSpeedListCount += 1;
 
@@ -215,7 +236,7 @@ public class CBull : MonoBehaviour
         }
     }
 
-    void SpeedDown()
+    protected void SpeedDown()
     {
         if (mSpeedListCount > 0)
         {
@@ -236,7 +257,7 @@ public class CBull : MonoBehaviour
         }
     }
 
-    void EvasionCheck()
+    protected void EvasionCheck()
     {
         if (!mCheckEvasion) return;
 
@@ -440,7 +461,7 @@ public class CBull : MonoBehaviour
         }
     }
 
-    void StackStickInputStack()
+    protected void StackStickInputStack()
     {
         PlayerObject playerObject = mPrayer.gameObject.GetComponent<PlayerObject>();
 
@@ -455,7 +476,7 @@ public class CBull : MonoBehaviour
         }
     }
 
-    void RollEvasion(STICK_STATUS[,] checkList)
+    protected void RollEvasion(STICK_STATUS[,] checkList)
     {
         int count = 0;
         int listCount = 0;
@@ -500,7 +521,7 @@ public class CBull : MonoBehaviour
         }
     }
 
-    void ReverseRollEvasion(STICK_STATUS[,] checkList)
+    protected void ReverseRollEvasion(STICK_STATUS[,] checkList)
     {
         int count = 0;
         int listCount = 0;

@@ -10,6 +10,13 @@ public class AttackPointObject : MonoBehaviour
     [SerializeField] private GameObject mReverseRollEvasionAttackEndPoint;//回転回避のエンドポイント（反時計回り）
     [SerializeField] private STICK_STATUS mAnswerStickStatusNormal;
 
+    private bool mIsUse;
+
+    private void Start()
+    {
+        mIsUse = false;
+    }
+
     public GameObject GetAttackEndPoint()
     {
         return mAttackEndPoint;
@@ -30,4 +37,21 @@ public class AttackPointObject : MonoBehaviour
     {
         return mAnswerStickStatusNormal;
     }
+
+    public bool GetIsUse()
+    {
+        return mIsUse;
+    }
+
+    public void IsUseNo()
+    {
+        mIsUse=true;
+    }
+
+    public void IsUseOFF()
+    {
+        mIsUse = false;
+    }
+
+
 }
