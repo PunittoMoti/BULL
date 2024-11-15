@@ -161,6 +161,10 @@ public class CBull : MonoBehaviour
         {
             mSelectAttackPoint = target[Random.Range(1, 3)];
 
+            //方向変換
+            this.gameObject.transform.LookAt(mSelectAttackPoint.transform);
+
+
             if (mSelectAttackPoint.GetComponent<AttackPointObject>().GetIsUse())
             {
                 //状態遷移
@@ -191,6 +195,9 @@ public class CBull : MonoBehaviour
         {
             mAttackSet = true;
             mNowSetAttackTime = 0.0f;
+            //方向変換
+            this.gameObject.transform.LookAt(mPrayer.transform);
+
         }
         //突撃準備位置で準備時間分待機する
         else if (mAttackSet && mNowSetAttackTime <= mSetAttackTime / mSpeedMagnification)
@@ -211,6 +218,7 @@ public class CBull : MonoBehaviour
 
             //準備Point使用中に変更
             mSelectAttackPoint.GetComponent<AttackPointObject>().IsUseOFF();
+
 
             //状態遷移
             bullStatus = BULL_STATUS.ATTACK;

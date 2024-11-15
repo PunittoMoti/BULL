@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static SValue;
 
 
 public class CNormalBull : CBull
@@ -25,6 +26,7 @@ public class CNormalBull : CBull
                 break;
             //回避判定チェック
             case BULL_STATUS.CHECK_EVASION:
+                transform.Find("Model").gameObject.GetComponent<Renderer>().material.color = Color.red;
                 StackStickInputStack();
                 Attack();
                 EvasionCheck();
@@ -39,7 +41,6 @@ public class CNormalBull : CBull
                 break;
             //回避後
             case BULL_STATUS.EVASION:
-                transform.Find("Model").gameObject.GetComponent<Renderer>().material.color = Color.red;
                 Attack();
                 break;
             //回避失敗
@@ -75,6 +76,127 @@ public class CNormalBull : CBull
         }
 
     }
+
+    //当たった瞬間
+    void OnTriggerEnter(Collider collision)
+    {
+        switch (bullStatus)
+        {
+            case BULL_STATUS.ATTACK:
+                if (collision.gameObject.name == "BULL")
+                {
+                    if (collision.gameObject.GetComponent<CBull>().GetBullStatus() == BULL_STATUS.EVASION)
+                    {
+                        bullStatus = BULL_STATUS.STUN_DAMAGE;
+                    }
+
+                }
+
+                if (!mPrayer.gameObject.GetComponent<PlayerObject>().GetPlayerControlFlag())
+                {
+                    if (collision.gameObject.name == "OutArea")
+                    {
+                        //プレイヤーのスタンフラグ有効化
+                        mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        SpeedDown();
+                        bullStatus = BULL_STATUS.FAILUREEVASION;
+                    }
+                }
+                break;
+            case BULL_STATUS.CHECK_EVASION:
+                if (!mPrayer.gameObject.GetComponent<PlayerObject>().GetPlayerControlFlag())
+                {
+                    if (collision.gameObject.name == "OutArea")
+                    {
+                        //プレイヤーのスタンフラグ有効化
+                        mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        SpeedDown();
+                        bullStatus = BULL_STATUS.FAILUREEVASION;
+                    }
+                }
+                break;
+            case BULL_STATUS.CHECK_JUSTEVASION:
+                if (!mPrayer.gameObject.GetComponent<PlayerObject>().GetPlayerControlFlag())
+                {
+                    if (collision.gameObject.name == "OutArea")
+                    {
+                        //プレイヤーのスタンフラグ有効化
+                        mPrayer.gameObject.GetComponent<PlayerObject>().StunPlayer();
+                        SpeedDown();
+                        bullStatus = BULL_STATUS.FAILUREEVASION;
+                    }
+                }
+                break;
+
+            case BULL_STATUS.EVASION:
+                if (collision.gameObject.name == "BULL")
+                {
+                    if (collision.gameObject.GetComponent<CBull>().GetBullStatus() == BULL_STATUS.ATTACK)
+                    {
+                        bullStatus = BULL_STATUS.STUN_ATTACK;
+                    }
+
+                }
+                break;
+        }
+
+
+
+
+    }
+
+    //当たり続けている間
+    void OnTriggerStay(Collider collision)
+    {
+        switch (bullStatus)
+        {
+            case BULL_STATUS.ATTACK:
+                if (collision.gameObject.name == "Player")
+                {
+                    //プレイヤーの入力がBULLが持っている受付入力と一致していれば
+                    if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == mCheckStickStatus)
+                    {
+                        bullStatus = BULL_STATUS.CHECK_EVASION;
+                        //スティック入力状態初期化
+                        mCheckStickStatuStack = new STICK_STATUS[8];
+
+                        for (int i = 0; i < mCheckStickStatuStack.Length; i++)
+                        {
+                            mCheckStickStatuStack[i] = STICK_STATUS.NOTINPUT;
+                        }
+
+                        mCheckStickStatuStack[0] = mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus();
+                        mStickStatuStackCount = 0;
+                        Debug.Log("スタック[" + mStickStatuStackCount + "]:" + mCheckStickStatuStack[mStickStatuStackCount]);
+                        mCheckEvasion = true;
+                    }
+                }
+
+                if (collision.gameObject.name == "JustArea")
+                {
+                    //プレイヤーの入力がBULLが持っている受付入力と一致していれば
+                    if (mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus() == mCheckStickStatus)
+                    {
+                        bullStatus = BULL_STATUS.CHECK_JUSTEVASION;
+                        //スティック入力状態初期化
+                        mCheckStickStatuStack = new STICK_STATUS[8];
+
+                        for (int i = 0; i < mCheckStickStatuStack.Length; i++)
+                        {
+                            mCheckStickStatuStack[i] = STICK_STATUS.NOTINPUT;
+                        }
+
+                        mCheckStickStatuStack[0] = mPrayer.gameObject.GetComponent<PlayerObject>().GetmStickStatus();
+                        mStickStatuStackCount = 0;
+                        Debug.Log("スタック[" + mStickStatuStackCount + "]:" + mCheckStickStatuStack[mStickStatuStackCount]);
+                        mCheckEvasion = true;
+                    }
+
+                }
+                break;
+        }
+    }
+
 
     void Attack()
     {
