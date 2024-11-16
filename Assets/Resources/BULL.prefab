@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4247001268535705494}
   - component: {fileID: 2732297358162096484}
   - component: {fileID: 4151227814519171033}
-  - component: {fileID: 40785186921259746}
+  - component: {fileID: 432439034745553890}
   m_Layer: 0
   m_Name: BULL
   m_TagString: Untagged
@@ -74,8 +74,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &40785186921259746
-BoxCollider:
+--- !u!135 &432439034745553890
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -93,7 +93,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 1, z: 0.5}
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3197969497716545553
 PrefabInstance:

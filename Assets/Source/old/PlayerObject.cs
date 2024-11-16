@@ -12,9 +12,6 @@ public class PlayerObject : MonoBehaviour
     [SerializeField] private InputAction mStickDwon;
     [SerializeField] private InputAction mStickLeft;
 
-
-
-
     private STICK_STATUS mStickStatus;
     [SerializeField] private float mMaxStunTime;
     private float mNowStunTime;
@@ -24,6 +21,9 @@ public class PlayerObject : MonoBehaviour
     private float mStickValueLeft;
 
     private bool mIsControl; 
+
+    private GameObject mPoint;
+    private GameObject mModel;
 
 
     // 有効化
@@ -51,6 +51,7 @@ public class PlayerObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        mPoint = transform.Find("InputDebugPoint").gameObject;
         mStickStatus = STICK_STATUS.NOTINPUT;
         mIsControl = false;
         mNowStunTime = 0.0f;
@@ -147,8 +148,11 @@ public class PlayerObject : MonoBehaviour
         {
             mStickStatus = STICK_STATUS.NOTINPUT;
         }
+
         if(mStickStatus != STICK_STATUS.NOTINPUT)
         {
+            //方向変換
+            this.gameObject.transform.LookAt(mPoint.transform);
             //Debug.Log($"ステックの状態 : {mStickStatus}");
         }
 

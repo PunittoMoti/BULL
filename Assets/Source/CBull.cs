@@ -85,7 +85,7 @@ public class CBull : MonoBehaviour
 
         //Debug.Log("距離:" + dis);
 
-        mAttackPoints = mPrayer.transform.Find("AttackPoins").gameObject;
+        mAttackPoints = GameObject.Find("AttackPoins").gameObject;
 
         // 子オブジェクトを格納する配列作成
         var children = new GameObject[mAttackPoints.transform.childCount];
